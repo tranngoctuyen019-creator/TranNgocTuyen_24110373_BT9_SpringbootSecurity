@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{layouts/layout :: head('Home')}"></head>
+<html lang="vi"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<head>
+	<title>Trang chủ</title>
+</head>
 <body>
-	<header th:replace="~{fragments/header :: header}"></header>
-	<main class="container">
-		<h1>Home</h1>
+	<main class="container" layout:fragment="content">
+		<h1>Trang chủ</h1>
+		<div class="panel profile">
+			<img class="avatar"
+				th:src="${#authentication.principal.images != null
+					and !#strings.isEmpty(#authentication.principal.images)
+					? #authentication.principal.images
+					: '/images/avatar-default.png'}"
+				alt="Avatar">
+			<p>
+				Xin chào <strong th:text="${#authentication.principal.fullName}">User</strong>
+			</p>
+		</div>
 	</main>
 </body>
 </html>

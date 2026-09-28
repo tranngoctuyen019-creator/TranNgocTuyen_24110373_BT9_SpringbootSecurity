@@ -279,3 +279,43 @@ body {
 		grid-column: 1
 	}
 }
+
+.account {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-left: auto
+}
+
+.avatar {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: #fff
+}
+
+.account .muted {
+	color: #bfdbfe;
+	font-size: 13px
+}
+
+.badge {
+	background: #2563eb;
+	color: #fff;
+	border-radius: 999px;
+	padding: 3px 10px;
+	font-size: 12px;
+	font-weight: 700
+}
+
+.profile {
+	display: flex;
+	align-items: center;
+	gap: 18px
+}
+
+.profile .avatar {
+	width: 72px;
+	height: 72px
+}
