@@ -1,0 +1,11 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{layouts/layout :: head(${mode == 'create' ? 'Thêm Product' : 'Sửa Product'})}"></head>
+<body><div th:replace="~{layouts/layout :: page(~{::main})}"><main class="narrow">
+<form th:object="${productDTO}" th:with="actionUrl=${mode == 'create' ? '/products/create' : '/products/edit/' + productDTO.id}" th:action="${actionUrl}" method="post" enctype="multipart/form-data"><h1 th:text="${mode == 'create' ? 'Thêm Product' : 'Sửa Product'}"></h1>
+<div th:if="${#fields.hasGlobalErrors()}" class="alert error"><p th:each="e : ${#fields.globalErrors()}" th:text="${e}"></p></div>
+<div class="form-grid"><label>Tên sản phẩm</label><div><input th:field="*{name}"><small class="field-error" th:errors="*{name}"></small></div>
+<label>Mô tả</label><textarea th:field="*{description}" rows="5"></textarea>
+<label>Giá</label><div><input type="number" step="0.01" th:field="*{price}"><small class="field-error" th:errors="*{price}"></small></div>
+<label>Ảnh</label><input type="file" name="image" accept="image/*">
+<div th:if="${productDTO.imageUrl != null}"><img th:src="${#strings.substringBefore(productDTO.imageUrl, '|')}" class="preview"></div>
+<div><button class="btn primary">Lưu</button> <a class="btn secondary" th:href="@{/products}">Hủy</a></div></div></form>
+</main></div></body></html>

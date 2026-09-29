@@ -1,0 +1,14 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{layouts/layout :: head('Users')}"></head>
+<body><div th:replace="~{layouts/layout :: page(~{::main})}"><main>
+<div class="page-title"><div><span class="eyebrow">ADMIN</span><h1>Quản lý Users</h1><p class="page-subtitle">Tìm kiếm, chỉnh sửa và quản lý tài khoản người dùng.</p></div><a class="btn primary" th:href="@{/users/create}">+ Thêm User</a></div>
+<div th:if="${success}" class="alert success" th:text="${success}"></div>
+<form class="search" th:action="@{/users}" method="get"><input name="keyword" th:value="${keyword}" placeholder="Username, email, họ tên..."><input type="hidden" name="size" th:value="${size}"><button class="btn primary">Tìm kiếm</button></form>
+<div class="table-card"><div class="table-wrap"><table><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Họ tên</th><th>Role</th><th>Enabled</th><th>Số Product</th><th>Action</th></tr></thead>
+<tbody><tr th:each="u : ${users.content}"><td th:text="${u.id}"></td><td th:text="${u.username}"></td><td th:text="${u.email}"></td><td th:text="${u.fullName}"></td><td th:text="${u.roleName}"></td><td th:text="${u.enabled ? 'Có' : 'Không'}"></td><td th:text="${u.productCount}"></td><td class="actions"><a th:href="@{/users/edit/{id}(id=${u.id})}">Edit</a> <form style="display:inline" th:action="@{/users/delete/{id}(id=${u.id})}" method="post" onsubmit="return confirm('Xóa user này?')"><button class="danger-link">Delete</button></form></td></tr>
+<tr th:if="${users.empty}"><td colspan="8">Không có dữ liệu.</td></tr></tbody></table></div></div>
+<div class="pagination" th:if="${users.totalPages > 0}">
+<a th:if="${users.hasPrevious()}" th:href="@{/users(page=${users.number-1},size=${size},keyword=${keyword})}">«</a>
+<span th:each="i : ${#numbers.sequence(pageStart, pageEnd - 1)}"><a th:classappend="${i == users.number ? ' active' : ''}" th:href="@{/users(page=${i},size=${size},keyword=${keyword})}" th:text="${i+1}"></a></span>
+<a th:if="${users.hasNext()}" th:href="@{/users(page=${users.number+1},size=${size},keyword=${keyword})}">»</a>
+</div>
+</main></div></body></html>

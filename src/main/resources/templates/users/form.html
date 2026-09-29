@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head
+        th:replace="~{layouts/layout :: head(${mode == 'create' ? 'Thêm User' : 'Sửa User'})}">
+</head>
+
+<body>
+
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+
+    <main class="narrow">
+
+        <form
+                th:object="${userDTO}"
+                method="post"
+                enctype="multipart/form-data"
+                th:action="${mode == 'create'}
+                    ? @{/users/create}
+                    : @{/users/edit/{id}(id=${userDTO.id})}">
+
+            <h1
+                    th:text="${mode == 'create'
+                    ? 'Thêm User'
+                    : 'Sửa User'}">
+            </h1>
+
+            <div
+                    th:if="${#fields.hasGlobalErrors()}"
+                    class="alert error">
+
+                <p
+                        th:each="e : ${#fields.globalErrors()}"
+                        th:text="${e}">
+                </p>
+
+            </div>
+
+            <div class="form-grid">
+
+                <label>Username</label>
+
+                <div>
+                    <input th:field="*{username}">
+
+                    <small
+                            class="field-error"
+                            th:errors="*{username}">
+                    </small>
+                </div>
+
+
+                <label>Email</label>
+
+                <div>
+                    <input
+                            type="email"
+                            th:field="*{email}">
+
+                    <small
+                            class="field-error"
+                            th:errors="*{email}">
+                    </small>
+                </div>
+
+
+                <label>Họ tên</label>
+
+                <div>
+                    <input th:field="*{fullName}">
+
+                    <small
+                            class="field-error"
+                            th:errors="*{fullName}">
+                    </small>
+                </div>
+
+
+                <label>Ảnh</label>
+
+                <div>
+
+                    <input
+                            type="file"
+                            name="image"
+                            accept="image/*">
+
+                    <div
+                            th:if="${userDTO.images != null
+                            and !#strings.isEmpty(userDTO.images)}"
+                            class="image-preview">
+
+                        <img
+                                th:src="${#strings.substringBefore(
+                                    userDTO.images,
+                                    '|'
+                                )}"
+                                class="preview"
+                                alt="Ảnh user">
+
+                    </div>
+
+                </div>
+
+
+                <label>Role</label>
+
+                <select th:field="*{roleName}">
+
+                    <option value="ROLE_USER">
+                        USER
+                    </option>
+
+                    <option value="ROLE_ADMIN">
+                        ADMIN
+                    </option>
+
+                </select>
+
+
+                <label>Trạng thái</label>
+
+                <label>
+                    <input
+                            type="checkbox"
+                            th:field="*{enabled}">
+
+                    Enabled
+                </label>
+
+
+                <div>
+
+                    <button
+                            type="submit"
+                            class="btn primary">
+
+                        Lưu
+
+                    </button>
+
+                    <a
+                            class="btn secondary"
+                            th:href="@{/users}">
+
+                        Hủy
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </form>
+
+        <p
+                th:if="${mode == 'create'}"
+                class="hint">
+
+            Mật khẩu mặc định:
+            <b>123456</b>.
+
+        </p>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,30 +1,100 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <body>
-	<header th:fragment="header" class="topbar">
-		<div class="brand">
-			<a th:href="@{/}">IOTSTAR SHOP</a>
-		</div>
-		<div class="account" th:if="${#authorization.expression('isAuthenticated()')}">
-			<img class="avatar"
-				th:src="${#authentication.principal.images != null
-					and !#strings.isEmpty(#authentication.principal.images)
-					? #authentication.principal.images
-					: '/images/avatar-default.png'}"
-				alt="Avatar">
-			<div>
-				<strong th:text="${#authentication.principal.fullName}">Nguyễn Văn A</strong>
-				<span th:text="'(' + ${#authentication.principal.username} + ')'">(nguyenvana)</span>
-				<div class="muted" th:text="${#authentication.principal.email}">email@gmail.com</div>
-			</div>
-			<span class="badge" th:text="${#authentication.principal.role}">ROLE_USER</span>
-			<form th:action="@{/logout}" method="post" style="display: inline">
-				<button class="link-button" type="submit">Đăng xuất</button>
-			</form>
-		</div>
-		<div class="account" th:unless="${#authorization.expression('isAuthenticated()')}">
-			<a class="link-button" th:href="@{/login}">Đăng nhập</a>
-		</div>
-	</header>
+
+<header th:fragment="header" class="topbar">
+    <div class="brand">
+        <a th:href="@{/}">
+            IOTSTAR SHOP
+        </a>
+    </div>
+
+    <nav>
+
+        <a th:href="@{/}">
+            Dashboard
+        </a>
+
+        <a
+                th:if="${#authorization.expression('isAuthenticated()')}"
+                th:href="@{/products}">
+            Products
+        </a>
+
+        <a
+                th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
+                th:href="@{/users}">
+            Users
+        </a>
+
+    </nav>
+    <div
+            class="account"
+            th:if="${#authorization.expression('isAuthenticated()')}">
+        <img
+                class="avatar"
+                th:if="${#authentication.principal.images != null
+                    and !#strings.isEmpty(
+                        #authentication.principal.images
+                    )}"
+                th:src="${#strings.substringBefore(
+                    #authentication.principal.images,
+                    '|'
+                )}"
+                alt="avatar">
+
+        <div>
+
+            <div
+                    th:text="${#authentication.name}">
+                admin
+            </div>
+
+            <span class="muted">
+
+                <span
+                        th:if="${#authorization.expression(
+                            'hasRole(''ADMIN'')'
+                        )}">
+                    ROLE_ADMIN
+                </span>
+
+                <span
+                        th:unless="${#authorization.expression(
+                            'hasRole(''ADMIN'')'
+                        )}">
+                    ROLE_USER
+                </span>
+
+            </span>
+
+        </div>
+        <form
+                th:action="@{/logout}"
+                method="post">
+
+            <button
+                    type="submit"
+                    class="link-button">
+
+                Logout
+
+            </button>
+
+        </form>
+
+    </div>
+    <div
+            th:unless="${#authorization.expression('isAuthenticated()')}">
+
+        <a th:href="@{/login}">
+            Login
+        </a>
+
+    </div>
+
+</header>
+
 </body>
 </html>

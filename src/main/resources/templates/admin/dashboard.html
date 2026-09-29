@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head
+        th:replace="~{fragments/header :: head('Admin Dashboard')}">
+</head>
+
+<body>
+
+<header th:replace="~{fragments/header :: header}"></header>
+
+
+<main class="container dashboard">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </h1>
+
+            <p class="page-description">
+                Tổng quan hệ thống
+            </p>
+
+        </div>
+
+    </div>
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="bi bi-people"></i>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Tổng User
+                </span>
+
+                <strong
+                        class="stat-value"
+                        th:text="${totalUsers}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="bi bi-box-seam"></i>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    Tổng sản phẩm
+                </span>
+
+                <strong
+                        class="stat-value"
+                        th:text="${totalProducts}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="bi bi-person-check"></i>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    User đang hoạt động
+                </span>
+
+                <strong
+                        class="stat-value"
+                        th:text="${activeUsers}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+
+                <i class="bi bi-person-x"></i>
+
+            </div>
+
+            <div class="stat-content">
+
+                <span class="stat-label">
+                    User bị khóa
+                </span>
+
+                <strong
+                        class="stat-value"
+                        th:text="${inactiveUsers}">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    <i class="bi bi-people"></i>
+                    Danh sách User
+                </h2>
+
+                <p>
+                    Thông tin người dùng trong hệ thống
+                </p>
+
+            </div>
+
+            <a
+                    th:href="@{/users}"
+                    class="btn btn-primary">
+
+                <i class="bi bi-person-gear"></i>
+                Quản lý User
+
+            </a>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table class="data-table">
+
+                <thead>
+
+                <tr>
+
+                    <th>STT</th>
+
+                    <th>Ảnh</th>
+
+                    <th>Username</th>
+
+                    <th>Họ tên</th>
+
+                    <th>Email</th>
+
+                    <th>Role</th>
+
+                    <th>Trạng thái</th>
+
+                    <th>Sản phẩm</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                <tr
+                        th:each="u, stat : ${users}">
+
+                    <!-- STT -->
+
+                    <td
+                            th:text="${stat.count}">
+                        1
+                    </td>
+
+                    <td>
+
+                        <div class="table-avatar">
+
+                            <img
+                                    th:src="${u.images != null
+                                        and !#strings.isEmpty(u.images)
+                                        ? #strings.substringBefore(
+                                            u.images,
+                                            '|'
+                                          )
+                                        : '/images/avatar-default.jpg'}"
+                                    alt="User avatar"
+                                    class="user-avatar">
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <strong
+                                th:text="${u.username}">
+                            username
+                        </strong>
+
+                    </td>
+
+                    <td
+                            th:text="${u.fullName}">
+                        -
+                    </td>
+
+                    <td
+                            th:text="${u.email}">
+                        -
+                    </td>
+
+                    <td>
+
+                        <span
+                                class="badge"
+                                th:classappend="${u.roleName == 'ROLE_ADMIN'}
+                                    ? ' badge-admin'
+                                    : ' badge-user'"
+                                th:text="${u.roleName == 'ROLE_ADMIN'
+                                    ? 'ADMIN'
+                                    : 'USER'}">
+
+                            USER
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span
+                                class="badge"
+                                th:classappend="${u.enabled}
+                                    ? ' badge-success'
+                                    : ' badge-danger'"
+                                th:text="${u.enabled
+                                    ? 'Hoạt động'
+                                    : 'Đã khóa'}">
+
+                            Hoạt động
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <span
+                                class="product-count"
+                                th:text="${u.productCount}">
+                            0
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                <tr
+                        th:if="${users == null
+                        or #lists.isEmpty(users)}">
+
+                    <td
+                            colspan="8"
+                            class="empty-state">
+
+                        <i class="bi bi-inbox"></i>
+
+                        <p>
+                            Chưa có user nào.
+                        </p>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    <i class="bi bi-lightning-charge"></i>
+                    Thao tác nhanh
+                </h2>
+
+                <p>
+                    Các chức năng quản trị thường dùng
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+            <a
+                    th:href="@{/users/create}"
+                    class="quick-action">
+
+                <div class="quick-action-icon">
+
+                    <i class="bi bi-person-plus"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Thêm User
+                    </strong>
+
+                    <span>
+                        Tạo tài khoản người dùng mới
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                    th:href="@{/products/create}"
+                    class="quick-action">
+
+                <div class="quick-action-icon">
+
+                    <i class="bi bi-plus-square"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Thêm sản phẩm
+                    </strong>
+
+                    <span>
+                        Tạo sản phẩm mới
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                    th:href="@{/users}"
+                    class="quick-action">
+
+                <div class="quick-action-icon">
+
+                    <i class="bi bi-people"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Quản lý User
+                    </strong>
+
+                    <span>
+                        Xem và chỉnh sửa User
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <a
+                    th:href="@{/products}"
+                    class="quick-action">
+
+                <div class="quick-action-icon">
+
+                    <i class="bi bi-box-seam"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Quản lý sản phẩm
+                    </strong>
+
+                    <span>
+                        Xem và chỉnh sửa sản phẩm
+                    </span>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+
+    <p>
+        © 2026 Web Store. All rights reserved.
+    </p>
+
+</footer>
+
+
+</body>
+</html>

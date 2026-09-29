@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html lang="vi"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layouts/layout}">
-<head>
-	<title>Trang chủ</title>
-</head>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layouts/layout :: head('Dashboard')}"></head>
 <body>
-	<main class="container" layout:fragment="content">
-		<h1>Trang chủ</h1>
-		<div class="panel profile">
-			<img class="avatar"
-				th:src="${#authentication.principal.images != null
-					and !#strings.isEmpty(#authentication.principal.images)
-					? #authentication.principal.images
-					: '/images/avatar-default.png'}"
-				alt="Avatar">
-			<p>
-				Xin chào <strong th:text="${#authentication.principal.fullName}">User</strong>
-			</p>
-		</div>
-	</main>
+<div th:replace="~{layouts/layout :: page(~{::main})}">
+    <main>
+        <div class="page-title">
+            <div>
+                <span class="eyebrow">IOTSTAR SHOP</span>
+                <h1>Dashboard</h1>
+                <p class="page-subtitle">Tổng quan nhanh về dữ liệu cửa hàng.</p>
+            </div>
+        </div>
+        <div th:if="${success}" class="alert success" th:text="${success}"></div>
+        <div class="cards">
+            <div class="card"><b>Total Users</b><strong th:text="${userCount}">0</strong></div>
+            <div class="card"><b>Total Products</b><strong th:text="${productCount}">0</strong></div>
+        </div>
+        <div class="quick-links mt">
+            <a class="btn primary" th:href="@{/products}">Quản lý Products</a>
+            <a class="btn secondary" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/users}">Quản lý Users</a>
+        </div>
+    </main>
+</div>
 </body>
 </html>

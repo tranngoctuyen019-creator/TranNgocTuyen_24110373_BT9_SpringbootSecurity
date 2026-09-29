@@ -2,46 +2,43 @@ package vn.iotstar.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(
-		name = "users",
-		uniqueConstraints = {
-				@UniqueConstraint(name = "uk_users_username", columnNames = "username"),
-				@UniqueConstraint(name = "uk_users_email", columnNames = "email")
-		}
-)
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Table(name = "users", indexes = {
+        @Index(name = "idx_users_username", columnList = "username"),
+        @Index(name = "idx_users_email", columnList = "email")
+})
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
 
-	@Column(nullable = false, unique = true, length = 50)
-	private String username;
+    @Column(nullable = false, unique = true, length = 150)
+    private String email;
 
-	@Column(nullable = false, unique = true, length = 150)
-	private String email;
+    @Column(nullable = false, length = 255)
+    private String password;
 
-	@Column(nullable = false)
-	private String password;
+    @Column(name = "full_name", nullable = false, length = 200, columnDefinition = "nvarchar(200)")
+    private String fullName;
 
-	@Column(name = "full_name", length = 150, columnDefinition = "nvarchar(200)")
-	private String fullName;
+    @Column(length = 1000)
+    private String images;
 
-	@Column(length = 500)
-	private String images;
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean enabled = false;
 
-	@Column(nullable = false)
-	@Builder.Default
-	private boolean enabled = true;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "role_id", nullable = false)
-	private Role role;
+    @Builder.Default
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
 }

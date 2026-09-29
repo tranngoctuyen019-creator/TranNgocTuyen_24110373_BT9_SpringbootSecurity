@@ -1,19 +1,20 @@
 package vn.iotstar.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class UserDTO {
-
-	private Long id;
-	private String username;
-	private String email;
-	private String fullName;
-	private String images;
-	private String roleName;
-	private boolean enabled;
+    private Long id;
+    @NotBlank(message = "Username không được để trống")
+    private String username;
+    @NotBlank(message = "Email không được để trống") @Email(message = "Email không hợp lệ")
+    private String email;
+    @NotBlank(message = "Họ tên không được để trống")
+    private String fullName;
+    private String images;
+    private boolean enabled;
+    private String roleName;
+    private long productCount;
 }
